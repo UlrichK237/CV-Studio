@@ -1,0 +1,6 @@
+{
+  "name": "CV Studio",
+  "description": "Créateur de CV professionnel et lettre de motivation assisté par IA avec modèles A4 et export PDF.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

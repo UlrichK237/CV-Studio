@@ -1,0 +1,236 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+
+@theme {
+  --color-page: var(--color-page);
+  --color-surface: var(--color-surface);
+  --color-surface-secondary: var(--color-surface-secondary);
+  --color-border-default: var(--color-border-default);
+  --color-border-strong: var(--color-border-strong);
+  
+  --color-text-primary: var(--color-text-primary);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-subtle: var(--color-text-subtle);
+
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-accent-contrast: var(--color-accent-contrast);
+
+  --color-btn-primary: var(--color-btn-primary);
+  --color-btn-primary-hover: var(--color-btn-primary-hover);
+  --color-btn-primary-text: var(--color-btn-primary-text);
+
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
+
+  --color-workspace: var(--color-workspace);
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+}
+
+@utility font-bebas {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+@utility font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Classes sémantiques directes */
+.bg-page { background-color: var(--color-page); }
+.bg-surface { background-color: var(--color-surface); }
+.bg-surface-secondary { background-color: var(--color-surface-secondary); }
+.bg-workspace { background-color: var(--color-workspace); }
+.bg-accent { background-color: var(--color-accent); }
+.bg-accent-soft { background-color: var(--color-accent-soft); }
+.bg-btn-primary { background-color: var(--color-btn-primary); }
+
+.border-default { border-color: var(--color-border-default); }
+.border-strong { border-color: var(--color-border-strong); }
+.border-accent { border-color: var(--color-accent); }
+
+.text-primary { color: var(--color-text-primary); }
+.text-muted { color: var(--color-text-muted); }
+.text-subtle { color: var(--color-text-subtle); }
+.text-accent { color: var(--color-accent); }
+.text-btn-primary { color: var(--color-btn-primary-text); }
+.text-success { color: var(--color-success); }
+.text-warning { color: var(--color-warning); }
+.text-danger { color: var(--color-danger); }
+
+.shadow-paper { box-shadow: var(--shadow-paper); }
+.shadow-dropdown { box-shadow: var(--shadow-dropdown); }
+.shadow-card { box-shadow: var(--shadow-card); }
+
+/* Focus accessible universel avec anneau 2px couleur accent et décalage 2px */
+*:focus-visible {
+  outline: 2px solid var(--color-accent) !important;
+  outline-offset: 2px !important;
+}
+
+/* Transitions discrètes et rapides (120ms à 160ms) */
+button, input, textarea, select, a {
+  transition-property: color, background-color, border-color, opacity, box-shadow;
+  transition-duration: 140ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Chiffres tabulaires pour compteurs et statistiques */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rendu propre de l'interface en dehors du document A4 */
+html body {
+  background-color: var(--color-page);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Formulaires : inputs et textareas utilisent les variables de tokens */
+input:not(#cv-print-wrapper *),
+textarea:not(#cv-print-wrapper *),
+select:not(#cv-print-wrapper *) {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  border-color: var(--color-border-default);
+}
+
+input:not(#cv-print-wrapper *)::placeholder,
+textarea:not(#cv-print-wrapper *)::placeholder {
+  color: var(--color-text-subtle);
+  opacity: 1;
+}
+
+/* RÈGLES DE RENDU DU DOCUMENT A4 STRICT (TOUJOURS BLANC) */
+.a4-page {
+  width: 210mm;
+  min-width: 210mm;
+  max-width: 210mm;
+  height: 297mm;
+  min-height: 297mm;
+  max-height: 297mm;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  background-color: #ffffff !important;
+  color: #0f172a;
+}
+
+/* Watermark styles */
+.watermark-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 50;
+}
+
+.watermark-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 140px;
+  color: rgba(31, 46, 85, 0.12);
+  transform: rotate(-35deg);
+  letter-spacing: 0.15em;
+  user-select: none;
+}
+
+/* Isolation hors-écran de #print-root sur l'écran */
+#print-root {
+  position: fixed !important;
+  top: -20000px !important;
+  left: -20000px !important;
+  width: 210mm !important;
+  height: 297mm !important;
+  overflow: hidden !important;
+  background-color: #ffffff !important;
+  z-index: -9999 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Gestion plein écran */
+body.fullscreen-open {
+  overflow: hidden !important;
+}
+body.fullscreen-open .no-fullscreen,
+body.fullscreen-open [class*="fixed bottom-0"] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Print Styles - Rendu vectoriel strict sur #print-root */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  
+  html, body {
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Cacher toute l'interface normale à l'impression */
+  #root,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Afficher UNIQUEMENT #print-root sans aucune marge ni transform */
+  #print-root {
+    display: block !important;
+    position: static !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    min-width: 210mm !important;
+    max-width: 210mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    transform: none !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+  }
+
+  #print-root .paper-document-root,
+  #print-root .a4-page {
+    box-shadow: none !important;
+    border: none !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

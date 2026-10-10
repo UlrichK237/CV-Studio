@@ -1,0 +1,80 @@
+/**
+ * CV Studio - Design System Tokens
+ * Source unique de vérité pour les couleurs, typographies, rayons et ombres de l'interface.
+ */
+
+:root,
+html[data-theme="light"],
+html:not([data-theme="dark"]) {
+  /* Mode jour */
+  --color-page: #F7F7F5;
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #F0F0EC;
+  --color-border-default: #E3E3DC;
+  --color-border-strong: #CFCFC5;
+
+  --color-text-primary: #14171F;
+  --color-text-muted: #545B6A;
+  --color-text-subtle: #6B7280;
+
+  --color-accent: #2442A8;
+  --color-accent-hover: #1B3489;
+  --color-accent-soft: #E8ECFA;
+  --color-accent-contrast: #FFFFFF;
+
+  --color-btn-primary: #2442A8;
+  --color-btn-primary-hover: #1B3489;
+  --color-btn-primary-text: #FFFFFF;
+
+  --color-success: #1F7A4D;
+  --color-warning: #9A6200;
+  --color-danger: #B42318;
+
+  --color-workspace: #E9E9E4;
+
+  --shadow-paper: 0 4px 20px -2px rgba(20, 23, 31, 0.08), 0 2px 6px -1px rgba(20, 23, 31, 0.04);
+  --shadow-dropdown: 0 6px 16px -2px rgba(20, 23, 31, 0.08), 0 2px 4px -1px rgba(20, 23, 31, 0.04);
+  --shadow-card: 0 1px 3px 0 rgba(20, 23, 31, 0.04);
+}
+
+html[data-theme="dark"],
+html.dark {
+  /* Mode nuit */
+  --color-page: #0E1014;
+  --color-surface: #151820;
+  --color-surface-secondary: #1C202A;
+  --color-border-default: #262B36;
+  --color-border-strong: #343A48;
+
+  --color-text-primary: #ECEEF3;
+  --color-text-muted: #A3A9B8;
+  --color-text-subtle: #7D8596;
+
+  --color-accent: #8EA6FF;
+  --color-accent-hover: #A5B8FF;
+  --color-accent-soft: #1E2540;
+  --color-accent-contrast: #0B0F1A;
+
+  --color-btn-primary: #6D8AF5;
+  --color-btn-primary-hover: #8EA6FF;
+  --color-btn-primary-text: #0B0F1A;
+
+  --color-success: #4CC38A;
+  --color-warning: #E0A93B;
+  --color-danger: #F27B6F;
+
+  --color-workspace: #0A0C10;
+
+  /* Pas d'ombres en mode nuit, de fines bordures à la place */
+  --shadow-paper: none;
+  --shadow-dropdown: none;
+  --shadow-card: none;
+}
+
+/* Couper temporairement les transitions lors du basculement de thème */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: none !important;
+}
