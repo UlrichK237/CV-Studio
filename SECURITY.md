@@ -5,7 +5,7 @@
 La sécurité de CV Studio et la confidentialité des données de nos utilisateurs sont prises très au sérieux. Si vous découvrez une faille de sécurité ou une vulnérabilité potentielle, merci de nous la signaler de manière responsable avant toute divulgation publique.
 
 ### Contact de sécurité
-- **E-mail de contact :** [À renseigner : votre-email@domaine.com]
+- **E-mail de contact :** [À renseigner : ulrichkoundi05@gmail.com]
 - **Délai de première réponse visé :** sous 48 heures ouvrées
 
 Merci d'inclure dans votre signalement :
