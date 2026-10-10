@@ -616,7 +616,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       )}
 
       {/* MODALE D'AIDE POUR L'IMPRESSION VECTORIELLE A4 STRICTE */}
-      {showPrintGuideModal && (
+      {showPrintGuideModal && createPortal(
         <div
           role="dialog"
           aria-modal="true"
@@ -685,6 +685,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             </div>
           </div>
         </div>
+        document.body
       )}
 
       {/* MODALE GALERIE VISUELLE */}
