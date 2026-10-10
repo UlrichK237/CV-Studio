@@ -684,7 +684,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
         document.body
       )}
 
