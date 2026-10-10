@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import React, { useState } from 'react';
 import { LayoutTemplate, Check, X } from 'lucide-react';
 import { TemplateId } from '../types';
@@ -546,7 +547,7 @@ export const TemplatePickerModal: React.FC<TemplatePickerModalProps> = ({
     onClose();
   };
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -648,6 +649,7 @@ export const TemplatePickerModal: React.FC<TemplatePickerModalProps> = ({
           })}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
