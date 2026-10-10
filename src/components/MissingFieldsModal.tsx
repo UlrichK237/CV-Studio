@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { AlertCircle, X } from 'lucide-react';
 
 interface MissingFieldsModalProps {
@@ -16,7 +17,7 @@ export const MissingFieldsModal: React.FC<MissingFieldsModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -71,6 +72,7 @@ export const MissingFieldsModal: React.FC<MissingFieldsModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
