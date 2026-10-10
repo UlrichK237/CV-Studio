@@ -9,8 +9,8 @@ export const HERO_VIDEO_MP4 = '/media/hero.mp4';
 // Chemin vers la vidéo WebM (optionnelle, vide par défaut)
 export const HERO_VIDEO_WEBM = '';
 
-// Image d'affiche (poster) optionnelle (vide par défaut : fond uni sombre #0A0C10)
-export const HERO_POSTER = '';
+// Image d'affiche (poster) optionnelle
+export const HERO_POSTER = '/media/hero-poster.jpg';
 
 // Opacité du voile sombre (#0A0C10) pour garantir la lisibilité et le contraste AA (>= 0.5)
 // La vidéo comporte des éléments clairs mobiles (feuille de CV blanche, manche claire, carnet blanc).

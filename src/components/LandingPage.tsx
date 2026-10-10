@@ -29,6 +29,7 @@ import { CanvaGeometrique } from '../templates/CanvaGeometrique';
 import { CanvaExecutif } from '../templates/CanvaExecutif';
 import { ClassiqueATS } from '../templates/ClassiqueATS';
 import { LettreTemplate } from '../templates/Lettre';
+import { PrivacyModal } from './PrivacyModal';
 
 interface LandingPageProps {
   onStart: (template?: TemplateId) => void;
@@ -126,6 +127,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     }
   };
 
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+
   const faqs = [
     {
       q: 'Le PDF téléchargé contient-il du texte sélectionnable ?',
@@ -133,7 +136,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     },
     {
       q: 'Où sont enregistrées mes données personnelles ?',
-      a: 'Exclusivement dans la mémoire locale de votre navigateur (localStorage). Aucun compte utilisateur n\'est requis, aucun mot de passe n\'est demandé, et aucune coordonnée n\'est stockée sur un serveur distant.',
+      a: "Vos données de CV sont enregistrées exclusivement dans la mémoire locale de votre navigateur (localStorage). Aucun compte utilisateur n'est requis et aucun stockage persistant n'existe sur nos serveurs. Lorsque vous sollicitez une fonction d'IA (amélioration de texte, lettre de motivation ou import), seuls les éléments nécessaires sont transmis de manière éphémère et chiffrée au fournisseur d'IA (Google Gemini) sans être conservés.",
     },
     {
       q: "L'application prend-elle en charge les candidatures en anglais ?",
@@ -771,6 +774,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             >
               Questions
             </a>
+            <button
+              type="button"
+              onClick={() => setIsPrivacyOpen(true)}
+              className="hover:text-primary transition-colors cursor-pointer font-medium"
+            >
+              Confidentialité
+            </button>
           </div>
 
           <span className="text-[12px] text-subtle">
@@ -778,6 +788,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </span>
         </div>
       </footer>
+
+      {/* Modale de Confidentialité */}
+      <PrivacyModal
+        isOpen={isPrivacyOpen}
+        onClose={() => setIsPrivacyOpen(false)}
+      />
     </div>
   );
 };

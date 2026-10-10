@@ -17,6 +17,7 @@ import {
   Sun,
   Moon,
   X,
+  ShieldCheck,
 } from 'lucide-react';
 import { CVData, CoverLetterData, ThemeMode } from './types';
 import { APP_NAME } from './config/app';
@@ -36,6 +37,7 @@ import { CoverLetterForm } from './components/CoverLetterForm';
 import { DocumentPreview } from './components/DocumentPreview';
 import { ConfirmModal } from './components/ConfirmModal';
 import { CVImportModal } from './components/CVImportModal';
+import { PrivacyModal } from './components/PrivacyModal';
 import { LandingPage } from './components/LandingPage';
 import { ThemeMenu, ThemeChoice, applyTheme } from './components/ui/ThemeMenu';
 
@@ -62,6 +64,7 @@ export default function App() {
   // Menus déroulants et modales
   const [showResetConfirm, setShowResetConfirm] = useState<boolean>(false);
   const [showImportModal, setShowImportModal] = useState<boolean>(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState<boolean>(false);
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState<boolean>(false);
   const [isDownloadMenuOpen, setIsDownloadMenuOpen] = useState<boolean>(false);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
@@ -401,6 +404,19 @@ export default function App() {
                     <span>Importer un CV</span>
                   </button>
 
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      setShowPrivacyModal(true);
+                      setIsMoreMenuOpen(false);
+                    }}
+                    className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-primary hover:bg-surface-secondary cursor-pointer text-left font-medium"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5 text-muted" />
+                    <span>Confidentialité</span>
+                  </button>
+
                   <div className="my-1 border-t border-default" />
 
                   <button
@@ -532,6 +548,19 @@ export default function App() {
                     >
                       <Upload className="w-3.5 h-3.5 text-muted" />
                       <span>Importer un CV</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setShowPrivacyModal(true);
+                        setIsMoreMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-primary hover:bg-surface-secondary cursor-pointer text-left"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-muted" />
+                      <span>Confidentialité</span>
                     </button>
 
                     <div className="my-1 border-t border-default" />
@@ -870,6 +899,13 @@ export default function App() {
         isOpen={showImportModal}
         onClose={() => setShowImportModal(false)}
         onImportSuccess={handleImportSuccess}
+      />
+
+      {/* 6. MODALE DE CONFIDENTIALITÉ */}
+      <PrivacyModal
+        isOpen={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+        onResetData={handleResetAll}
       />
     </div>
   );
