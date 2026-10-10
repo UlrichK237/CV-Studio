@@ -357,10 +357,10 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
               title="Choisir la couleur d'accent du document"
             >
               <span
-                className="w-3.5 h-3.5 rounded-full border border-black/15 shrink-0"
+                className="w-4 h-4 rounded-full ring-1 ring-black/20 dark:ring-white/40 border border-white/60 dark:border-black/40 shadow-xs shrink-0"
                 style={{ backgroundColor: currentPalette.fonce }}
               />
-              <span className="hidden sm:inline">Couleur</span>
+              <span>Couleur</span>
             </button>
 
             {isPalettePopoverOpen && (

@@ -54,11 +54,6 @@ export const LettreTemplate: React.FC<LettreProps> = ({
           >
             {cv.nom || 'Votre Nom'}
           </h1>
-          {cv.titre && (
-            <p className="font-medium italic" style={{ color: palette.fonce }}>
-              {cv.titre}
-            </p>
-          )}
           {cv.contact.telephone && <p className="text-slate-700">{cv.contact.telephone}</p>}
           {cv.contact.email && <p className="text-slate-700">{cv.contact.email}</p>}
           {cv.contact.localisation && <p className="text-slate-700">{cv.contact.localisation}</p>}

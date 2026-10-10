@@ -13,6 +13,10 @@ import {
   Loader2,
   MoreHorizontal,
   Sparkles,
+  Laptop,
+  Sun,
+  Moon,
+  X,
 } from 'lucide-react';
 import { CVData, CoverLetterData, ThemeMode } from './types';
 import { APP_NAME } from './config/app';
@@ -61,23 +65,40 @@ export default function App() {
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState<boolean>(false);
   const [isDownloadMenuOpen, setIsDownloadMenuOpen] = useState<boolean>(false);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
+  const [isMobileDownloadSheetOpen, setIsMobileDownloadSheetOpen] = useState<boolean>(false);
 
   const moreMenuRef = useRef<HTMLDivElement>(null);
+  const mobileMoreMenuRef = useRef<HTMLDivElement>(null);
   const downloadMenuRef = useRef<HTMLDivElement>(null);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fermeture des menus au clic extérieur
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
+      if (
+        moreMenuRef.current &&
+        !moreMenuRef.current.contains(e.target as Node) &&
+        (!mobileMoreMenuRef.current || !mobileMoreMenuRef.current.contains(e.target as Node))
+      ) {
         setIsMoreMenuOpen(false);
       }
       if (downloadMenuRef.current && !downloadMenuRef.current.contains(e.target as Node)) {
         setIsDownloadMenuOpen(false);
       }
     }
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setIsMoreMenuOpen(false);
+        setIsDownloadMenuOpen(false);
+        setIsMobileDownloadSheetOpen(false);
+      }
+    }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   // Détection des changements et debounce de sauvegarde (500 ms)
@@ -211,95 +232,149 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-page text-primary font-sans antialiased selection:bg-accent-soft selection:text-accent">
       {/* 1. BARRE SUPÉRIEURE FINE (56 PX) */}
-      <header className="no-print sticky top-0 z-40 h-14 bg-surface border-b border-default px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto h-full flex items-center justify-between gap-3">
-          {/* GAUCHE : Logo + Onglets CV / Lettre */}
-          <div className="flex items-center gap-4 sm:gap-6 min-w-0">
+      <header
+        className="no-print sticky top-0 z-40 bg-surface border-b border-default px-4 sm:px-6"
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+      >
+        <div className="max-w-7xl mx-auto h-14 flex items-center justify-between gap-2">
+          {/* VERSION MOBILE (< lg) : Une seule ligne propre, hauteur 56 px, padding 16 px */}
+          <div className="flex lg:hidden items-center justify-between gap-2 w-full h-full">
+            {/* Logo CV 32 px (cible tactile >= 44 px) */}
             <button
               type="button"
               onClick={() => setCurrentView('landing')}
-              className="flex items-center gap-2 hover:opacity-85 transition-opacity cursor-pointer shrink-0"
+              className="w-11 h-11 -ml-1 flex items-center justify-center hover:opacity-85 transition-opacity cursor-pointer shrink-0"
               title="Retourner à l'accueil"
+              aria-label="Retourner à l'accueil"
             >
-              <div className="w-7 h-7 rounded-[6px] bg-accent text-accent-contrast flex items-center justify-center font-semibold text-[13px] tracking-tight shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-accent text-accent-contrast flex items-center justify-center font-bold text-sm tracking-tight shrink-0 shadow-xs">
                 CV
               </div>
-              <span className="font-semibold text-[15px] tracking-tight text-primary hidden sm:inline">
-                {APP_NAME}
-              </span>
             </button>
 
-            {/* Onglets CV / Lettre de motivation */}
-            <div className="flex items-center bg-surface-secondary border border-default p-0.5 rounded-lg text-[13px]">
-              <button
-                type="button"
-                onClick={() => handleTabChange('cv')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-md font-medium transition-colors cursor-pointer ${
-                  settings.activeTab === 'cv'
-                    ? 'bg-surface text-primary shadow-xs'
-                    : 'text-muted hover:text-primary'
-                }`}
-              >
-                <FileText className="w-3.5 h-3.5 shrink-0" />
-                <span>CV</span>
-              </button>
+            {/* Onglets CV | Lettre, au centre, avec leurs libellés TOUJOURS visibles */}
+            <div className="flex-1 flex justify-center min-w-0">
+              <div className="flex items-center bg-surface-secondary border border-default p-0.5 rounded-lg text-[13px] shrink-0 max-w-full">
+                <button
+                  type="button"
+                  onClick={() => handleTabChange('cv')}
+                  className={`min-h-[38px] px-3.5 py-1.5 rounded-md font-medium transition-colors cursor-pointer flex items-center gap-1.5 whitespace-nowrap text-[13px] ${
+                    settings.activeTab === 'cv'
+                      ? 'bg-surface text-primary shadow-xs'
+                      : 'text-muted hover:text-primary'
+                  }`}
+                >
+                  <FileText className="w-3.5 h-3.5 shrink-0 hidden min-[360px]:inline" />
+                  <span className="whitespace-nowrap font-medium">CV</span>
+                </button>
 
-              <button
-                type="button"
-                onClick={() => handleTabChange('lettre')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-md font-medium transition-colors cursor-pointer ${
-                  settings.activeTab === 'lettre'
-                    ? 'bg-surface text-primary shadow-xs'
-                    : 'text-muted hover:text-primary'
-                }`}
-              >
-                <Mail className="w-3.5 h-3.5 shrink-0" />
-                <span>Lettre</span>
-              </button>
-            </div>
-          </div>
-
-          {/* DROITE : Indicateur Enregistré, Thème, Menu Plus, Bouton Télécharger PDF */}
-          <div className="flex items-center gap-2.5 shrink-0">
-            {/* Indicateur de sauvegarde discret */}
-            <div className="hidden md:flex items-center gap-1.5 text-[12px] text-muted pr-2 border-r border-default">
-              {isSaved ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-success" />
-                  <span>Enregistré</span>
-                </>
-              ) : (
-                <span className="text-warning">Enregistrement...</span>
-              )}
+                <button
+                  type="button"
+                  onClick={() => handleTabChange('lettre')}
+                  className={`min-h-[38px] px-3.5 py-1.5 rounded-md font-medium transition-colors cursor-pointer flex items-center gap-1.5 whitespace-nowrap text-[13px] ${
+                    settings.activeTab === 'lettre'
+                      ? 'bg-surface text-primary shadow-xs'
+                      : 'text-muted hover:text-primary'
+                  }`}
+                >
+                  <Mail className="w-3.5 h-3.5 shrink-0 hidden min-[360px]:inline" />
+                  <span className="whitespace-nowrap font-medium">Lettre</span>
+                </button>
+              </div>
             </div>
 
-            {/* Menu de thème (Système, Clair, Sombre) */}
-            <ThemeMenu
-              currentTheme={settings.themeMode || 'system'}
-              onThemeChange={(t: ThemeChoice) =>
-                setSettings((prev) => ({ ...prev, themeMode: t }))
-              }
-            />
-
-            {/* Menu "Plus" */}
-            <div ref={moreMenuRef} className="relative">
+            {/* Bouton "..." de 40 px (cible tactile >= 44 px) */}
+            <div ref={mobileMoreMenuRef} className="relative shrink-0">
               <button
                 type="button"
                 onClick={() => setIsMoreMenuOpen((prev) => !prev)}
                 aria-haspopup="menu"
                 aria-expanded={isMoreMenuOpen}
-                aria-label="Options supplémentaires"
-                className="w-9 h-9 flex items-center justify-center rounded-lg border border-default bg-surface text-muted hover:text-primary hover:bg-surface-secondary cursor-pointer transition-colors"
-                title="Options supplémentaires"
+                aria-label="Options et paramètres"
+                className="w-11 h-11 -mr-1 flex items-center justify-center rounded-lg cursor-pointer transition-colors text-muted hover:text-primary"
+                title="Menu"
               >
-                <MoreHorizontal className="w-4 h-4" />
+                <div className="w-10 h-10 flex items-center justify-center rounded-lg border border-default bg-surface hover:bg-surface-secondary shadow-xs">
+                  <MoreHorizontal className="w-5 h-5 text-primary" />
+                </div>
               </button>
 
+              {/* Menu déroulant mobile */}
               {isMoreMenuOpen && (
                 <div
                   role="menu"
-                  className="absolute right-0 mt-1.5 w-48 bg-surface border border-default rounded-xl shadow-dropdown py-1 z-50 text-[13px]"
+                  className="absolute right-0 top-full mt-1.5 w-64 bg-surface border border-default rounded-xl shadow-dropdown py-1 z-50 text-[13px]"
                 >
+                  {/* Indicateur Enregistré au sommet du menu mobile */}
+                  <div className="px-3.5 py-2.5 flex items-center justify-between text-[12px] border-b border-default bg-surface-secondary/40">
+                    <span className="font-medium text-muted">Statut</span>
+                    <div className="flex items-center gap-1.5 font-medium">
+                      {isSaved ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-success" />
+                          <span className="text-success">Enregistré</span>
+                        </>
+                      ) : (
+                        <span className="text-warning">Enregistrement...</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Choix du Thème mobile */}
+                  <div className="px-3.5 py-2.5 border-b border-default space-y-1.5">
+                    <span className="text-[11px] font-semibold text-muted uppercase tracking-wider block">
+                      Thème
+                    </span>
+                    <div className="grid grid-cols-3 gap-1 bg-surface-secondary p-1 rounded-lg">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSettings((prev) => ({ ...prev, themeMode: 'system' }));
+                          setIsMoreMenuOpen(false);
+                        }}
+                        className={`min-h-[36px] flex items-center justify-center gap-1 rounded-md text-[11px] font-medium transition-colors ${
+                          (settings.themeMode || 'system') === 'system'
+                            ? 'bg-surface text-primary shadow-xs'
+                            : 'text-muted hover:text-primary'
+                        }`}
+                      >
+                        <Laptop className="w-3 h-3" />
+                        <span>Auto</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSettings((prev) => ({ ...prev, themeMode: 'light' }));
+                          setIsMoreMenuOpen(false);
+                        }}
+                        className={`min-h-[36px] flex items-center justify-center gap-1 rounded-md text-[11px] font-medium transition-colors ${
+                          settings.themeMode === 'light'
+                            ? 'bg-surface text-primary shadow-xs'
+                            : 'text-muted hover:text-primary'
+                        }`}
+                      >
+                        <Sun className="w-3 h-3" />
+                        <span>Clair</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSettings((prev) => ({ ...prev, themeMode: 'dark' }));
+                          setIsMoreMenuOpen(false);
+                        }}
+                        className={`min-h-[36px] flex items-center justify-center gap-1 rounded-md text-[11px] font-medium transition-colors ${
+                          settings.themeMode === 'dark'
+                            ? 'bg-surface text-primary shadow-xs'
+                            : 'text-muted hover:text-primary'
+                        }`}
+                      >
+                        <Moon className="w-3 h-3" />
+                        <span>Sombre</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Actions de l'application */}
                   <button
                     type="button"
                     role="menuitem"
@@ -307,8 +382,9 @@ export default function App() {
                       handleLoadSample();
                       setIsMoreMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-primary hover:bg-surface-secondary cursor-pointer text-left"
+                    className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-primary hover:bg-surface-secondary cursor-pointer text-left font-medium"
                   >
+                    <Sparkles className="w-4 h-4 text-accent" />
                     <span>Charger l'exemple</span>
                   </button>
 
@@ -319,7 +395,7 @@ export default function App() {
                       setShowImportModal(true);
                       setIsMoreMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-primary hover:bg-surface-secondary cursor-pointer text-left"
+                    className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-primary hover:bg-surface-secondary cursor-pointer text-left font-medium"
                   >
                     <Upload className="w-3.5 h-3.5 text-muted" />
                     <span>Importer un CV</span>
@@ -334,99 +410,230 @@ export default function App() {
                       setShowResetConfirm(true);
                       setIsMoreMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-danger hover:bg-danger/5 cursor-pointer text-left"
+                    className="w-full min-h-[44px] flex items-center gap-2.5 px-3.5 py-2.5 text-danger hover:bg-danger/5 cursor-pointer text-left font-medium"
                   >
-                    <RotateCcw className="w-3.5 h-3.5" />
+                    <RotateCcw className="w-3.5 h-3.5 text-danger" />
                     <span>Réinitialiser tout</span>
                   </button>
                 </div>
               )}
             </div>
+          </div>
 
-            {/* Bouton principal Télécharger le CV/Lettre avec sous-menu pour impression */}
-            <div ref={downloadMenuRef} className="relative flex items-center">
+          {/* VERSION ORDINATEUR (>= lg) : Structure complète et inchangée */}
+          <div className="hidden lg:flex items-center justify-between gap-3 w-full h-full">
+            {/* GAUCHE : Logo + Onglets CV / Lettre */}
+            <div className="flex items-center gap-6 min-w-0">
               <button
                 type="button"
-                onClick={handleDownloadPdf}
-                disabled={isDownloading}
-                className="h-9 pl-3.5 pr-2.5 text-[13px] font-medium text-btn-primary bg-btn-primary hover:opacity-95 rounded-l-lg shadow-card flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-75"
-                title="Télécharger le PDF (vectoriel recommandé)"
+                onClick={() => setCurrentView('landing')}
+                className="flex items-center gap-2 hover:opacity-85 transition-opacity cursor-pointer shrink-0"
+                title="Retourner à l'accueil"
               >
-                {isDownloading ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <Download className="w-3.5 h-3.5" />
-                )}
-                <span className="hidden sm:inline">
-                  {isDownloading
-                    ? 'Téléchargement...'
-                    : settings.activeTab === 'lettre'
-                    ? 'Télécharger la lettre'
-                    : 'Télécharger le CV'}
-                </span>
-                <span className="sm:hidden">
-                  {isDownloading ? 'PDF...' : 'Télécharger'}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setIsDownloadMenuOpen((prev) => !prev)}
-                aria-haspopup="menu"
-                aria-expanded={isDownloadMenuOpen}
-                aria-label="Options de téléchargement"
-                className="h-9 px-2 text-btn-primary bg-btn-primary hover:opacity-90 border-l border-white/20 rounded-r-lg shadow-card cursor-pointer transition-colors flex items-center justify-center"
-              >
-                <ChevronDown className="w-3.5 h-3.5" />
-              </button>
-
-              {isDownloadMenuOpen && (
-                <div
-                  role="menu"
-                  className="absolute right-0 top-full mt-1.5 w-72 bg-surface border border-default rounded-xl shadow-dropdown py-1.5 z-50 text-[13px]"
-                >
-                  <button
-                    type="button"
-                    role="menuitem"
-                    onClick={() => {
-                      setIsDownloadMenuOpen(false);
-                      handleDownloadPdf();
-                    }}
-                    className="w-full flex items-center justify-between px-3.5 py-2.5 text-primary hover:bg-surface-secondary cursor-pointer text-left font-medium transition-colors"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <Printer className="w-4 h-4 text-accent shrink-0" />
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-primary">PDF (texte sélectionnable)</span>
-                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-accent/15 text-accent border border-accent/30">
-                            Recommandé
-                          </span>
-                        </div>
-                        <div className="text-[11px] text-muted font-normal mt-0.5">Format A4 vectoriel net et indexable</div>
-                      </div>
-                    </div>
-                  </button>
-
-                  <div className="my-1 border-t border-default" />
-
-                  <button
-                    type="button"
-                    role="menuitem"
-                    onClick={() => {
-                      setIsDownloadMenuOpen(false);
-                      handleDownloadDirectPdf();
-                    }}
-                    className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-primary hover:bg-surface-secondary cursor-pointer text-left font-medium transition-colors"
-                  >
-                    <Download className="w-4 h-4 text-muted shrink-0" />
-                    <div>
-                      <div className="font-semibold text-primary">PDF image (copie exacte de l'aperçu)</div>
-                      <div className="text-[11px] text-muted font-normal mt-0.5">Rendu pixel-perfect haute résolution</div>
-                    </div>
-                  </button>
+                <div className="w-7 h-7 rounded-[6px] bg-accent text-accent-contrast flex items-center justify-center font-semibold text-[13px] tracking-tight shrink-0">
+                  CV
                 </div>
-              )}
+                <span className="font-semibold text-[15px] tracking-tight text-primary">
+                  {APP_NAME}
+                </span>
+              </button>
+
+              {/* Onglets CV / Lettre de motivation */}
+              <div className="flex items-center bg-surface-secondary border border-default p-0.5 rounded-lg text-[13px]">
+                <button
+                  type="button"
+                  onClick={() => handleTabChange('cv')}
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md font-medium transition-colors cursor-pointer ${
+                    settings.activeTab === 'cv'
+                      ? 'bg-surface text-primary shadow-xs'
+                      : 'text-muted hover:text-primary'
+                  }`}
+                >
+                  <FileText className="w-3.5 h-3.5 shrink-0" />
+                  <span>CV</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleTabChange('lettre')}
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md font-medium transition-colors cursor-pointer ${
+                    settings.activeTab === 'lettre'
+                      ? 'bg-surface text-primary shadow-xs'
+                      : 'text-muted hover:text-primary'
+                  }`}
+                >
+                  <Mail className="w-3.5 h-3.5 shrink-0" />
+                  <span>Lettre</span>
+                </button>
+              </div>
+            </div>
+
+            {/* DROITE : Indicateur Enregistré, Thème, Menu Plus, Bouton Télécharger PDF */}
+            <div className="flex items-center gap-2.5 shrink-0">
+              {/* Indicateur de sauvegarde discret */}
+              <div className="flex items-center gap-1.5 text-[12px] text-muted pr-2 border-r border-default">
+                {isSaved ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-success" />
+                    <span>Enregistré</span>
+                  </>
+                ) : (
+                  <span className="text-warning">Enregistrement...</span>
+                )}
+              </div>
+
+              {/* Menu de thème (Système, Clair, Sombre) */}
+              <ThemeMenu
+                currentTheme={settings.themeMode || 'system'}
+                onThemeChange={(t: ThemeChoice) =>
+                  setSettings((prev) => ({ ...prev, themeMode: t }))
+                }
+              />
+
+              {/* Menu "Plus" */}
+              <div ref={moreMenuRef} className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsMoreMenuOpen((prev) => !prev)}
+                  aria-haspopup="menu"
+                  aria-expanded={isMoreMenuOpen}
+                  aria-label="Options supplémentaires"
+                  className="w-9 h-9 flex items-center justify-center rounded-lg border border-default bg-surface text-muted hover:text-primary hover:bg-surface-secondary cursor-pointer transition-colors"
+                  title="Options supplémentaires"
+                >
+                  <MoreHorizontal className="w-4 h-4" />
+                </button>
+
+                {isMoreMenuOpen && (
+                  <div
+                    role="menu"
+                    className="absolute right-0 mt-1.5 w-48 bg-surface border border-default rounded-xl shadow-dropdown py-1 z-50 text-[13px]"
+                  >
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        handleLoadSample();
+                        setIsMoreMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-primary hover:bg-surface-secondary cursor-pointer text-left"
+                    >
+                      <span>Charger l'exemple</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setShowImportModal(true);
+                        setIsMoreMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-primary hover:bg-surface-secondary cursor-pointer text-left"
+                    >
+                      <Upload className="w-3.5 h-3.5 text-muted" />
+                      <span>Importer un CV</span>
+                    </button>
+
+                    <div className="my-1 border-t border-default" />
+
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setShowResetConfirm(true);
+                        setIsMoreMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-danger hover:bg-danger/5 cursor-pointer text-left"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Réinitialiser tout</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Bouton principal Télécharger le CV/Lettre avec sous-menu pour impression */}
+              <div ref={downloadMenuRef} className="relative flex items-center">
+                <button
+                  type="button"
+                  onClick={handleDownloadPdf}
+                  disabled={isDownloading}
+                  className="h-9 pl-3.5 pr-2.5 text-[13px] font-medium text-btn-primary bg-btn-primary hover:opacity-95 rounded-l-lg shadow-card flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-75"
+                  title="Télécharger le PDF (vectoriel recommandé)"
+                >
+                  {isDownloading ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Download className="w-3.5 h-3.5" />
+                  )}
+                  <span>
+                    {isDownloading
+                      ? 'Téléchargement...'
+                      : settings.activeTab === 'lettre'
+                      ? 'Télécharger la lettre'
+                      : 'Télécharger le CV'}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsDownloadMenuOpen((prev) => !prev)}
+                  aria-haspopup="menu"
+                  aria-expanded={isDownloadMenuOpen}
+                  aria-label="Options de téléchargement"
+                  className="h-9 px-2 text-btn-primary bg-btn-primary hover:opacity-90 border-l border-white/20 rounded-r-lg shadow-card cursor-pointer transition-colors flex items-center justify-center"
+                >
+                  <ChevronDown className="w-3.5 h-3.5" />
+                </button>
+
+                {isDownloadMenuOpen && (
+                  <div
+                    role="menu"
+                    className="absolute right-0 top-full mt-1.5 w-72 bg-surface border border-default rounded-xl shadow-dropdown py-1.5 z-50 text-[13px]"
+                  >
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setIsDownloadMenuOpen(false);
+                        handleDownloadPdf();
+                      }}
+                      className="w-full flex items-center justify-between px-3.5 py-2.5 text-primary hover:bg-surface-secondary cursor-pointer text-left font-medium transition-colors"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Printer className="w-4 h-4 text-accent shrink-0" />
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-primary">PDF (texte sélectionnable)</span>
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-accent/15 text-accent border border-accent/30">
+                              Recommandé
+                            </span>
+                          </div>
+                          <div className="text-[11px] text-muted font-normal mt-0.5">Format A4 vectoriel net et indexable</div>
+                        </div>
+                      </div>
+                    </button>
+
+                    <div className="my-1 border-t border-default" />
+
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setIsDownloadMenuOpen(false);
+                        handleDownloadDirectPdf();
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-primary hover:bg-surface-secondary cursor-pointer text-left font-medium transition-colors"
+                    >
+                      <Download className="w-4 h-4 text-muted shrink-0" />
+                      <div>
+                        <div className="font-semibold text-primary">PDF image (copie exacte de l'aperçu)</div>
+                        <div className="text-[11px] text-muted font-normal mt-0.5">Rendu pixel-perfect haute résolution</div>
+                      </div>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -518,7 +725,9 @@ export default function App() {
 
         <button
           type="button"
-          onClick={handleDownloadDirectPdf}
+          onClick={() => {
+            if (!isDownloading) setIsMobileDownloadSheetOpen(true);
+          }}
           disabled={isDownloading}
           className="flex flex-col items-center gap-1 text-[12px] font-medium transition-colors cursor-pointer disabled:opacity-75"
         >
@@ -530,6 +739,119 @@ export default function App() {
           <span className="text-accent">{isDownloading ? 'Export...' : 'Télécharger'}</span>
         </button>
       </div>
+
+      {/* 3b. FEUILLE DE TÉLÉCHARGEMENT SUR MOBILE (BOTTOM SHEET) */}
+      {isMobileDownloadSheetOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="mobile-download-title"
+          className="no-print lg:hidden fixed inset-0 z-50 flex flex-col justify-end"
+        >
+          {/* Backdrop sombre cliquable */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+            onClick={() => setIsMobileDownloadSheetOpen(false)}
+          />
+
+          {/* Panneau coulissant du bas */}
+          <div
+            className="relative w-full bg-surface border-t border-default rounded-t-2xl shadow-2xl p-5 pt-3 max-h-[85vh] overflow-y-auto z-10"
+            style={{ paddingBottom: 'calc(1.25rem + env(safe-area-inset-bottom, 0px))' }}
+          >
+            {/* Barre de préhension (drag handle) */}
+            <div className="w-10 h-1 bg-muted/30 rounded-full mx-auto mb-3" />
+
+            {/* En-tête */}
+            <div className="flex items-center justify-between pb-3 border-b border-default mb-4">
+              <div>
+                <h3 id="mobile-download-title" className="font-semibold text-base text-primary">
+                  Télécharger
+                </h3>
+                <p className="text-[12px] text-muted">
+                  {settings.activeTab === 'lettre'
+                    ? 'Choisissez le mode d’export pour votre lettre de motivation'
+                    : 'Choisissez le mode d’export pour votre CV'}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsMobileDownloadSheetOpen(false)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-muted hover:text-primary hover:bg-surface-secondary cursor-pointer transition-colors"
+                aria-label="Fermer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Options de téléchargement */}
+            <div className="space-y-3">
+              {/* Option 1 : PDF texte sélectionnable (Recommandé) */}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileDownloadSheetOpen(false);
+                  handleDownloadPdf();
+                }}
+                className="w-full p-3.5 rounded-xl border border-accent/40 bg-accent/5 hover:bg-accent/10 transition-colors text-left cursor-pointer flex items-start gap-3"
+              >
+                <div className="w-9 h-9 rounded-lg bg-accent/15 text-accent flex items-center justify-center shrink-0 mt-0.5">
+                  <Printer className="w-4 h-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-[13.5px] text-primary">
+                      PDF (texte sélectionnable)
+                    </span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-accent text-accent-contrast">
+                      Recommandé
+                    </span>
+                  </div>
+                  <p className="text-[12px] text-muted mt-1 leading-snug">
+                    Format A4 vectoriel net, texte sélectionnable et indexable par les recruteurs.
+                  </p>
+                </div>
+              </button>
+
+              {/* Option 2 : PDF image */}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileDownloadSheetOpen(false);
+                  handleDownloadDirectPdf();
+                }}
+                className="w-full p-3.5 rounded-xl border border-default bg-surface hover:bg-surface-secondary transition-colors text-left cursor-pointer flex items-start gap-3"
+              >
+                <div className="w-9 h-9 rounded-lg bg-surface-secondary text-muted flex items-center justify-center shrink-0 mt-0.5">
+                  <Download className="w-4 h-4 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="font-semibold text-[13.5px] text-primary block">
+                    PDF image (copie exacte de l'aperçu)
+                  </span>
+                  <p className="text-[12px] text-muted mt-1 leading-snug">
+                    Capture visuelle pixel-perfect haute résolution (conforme à l’écran).
+                  </p>
+                </div>
+              </button>
+            </div>
+
+            {/* Message d'aide de la fenêtre d'impression existant */}
+            <div className="bg-surface-secondary/70 border border-default rounded-xl p-3.5 space-y-2 text-[12px] mt-4">
+              <p className="font-semibold text-accent flex items-center gap-1.5">
+                <span>Dans la fenêtre d'impression :</span>
+              </p>
+              <ul className="space-y-1 text-muted pl-4 list-disc text-[11.5px] leading-relaxed">
+                <li><strong>Destination :</strong> « Enregistrer au format PDF »</li>
+                <li><strong>Format :</strong> A4</li>
+                <li><strong>Marges :</strong> « Aucune » (ou 0 mm)</li>
+                <li><strong>Échelle :</strong> 100 %</li>
+                <li><strong>Options :</strong> Décocher « En-têtes et pieds de page »</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 4. MODALE DE RÉINITIALISATION */}
       <ConfirmModal
