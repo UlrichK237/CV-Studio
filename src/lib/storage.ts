@@ -1,5 +1,5 @@
 import { CVData, CoverLetterData, PaletteId, TemplateId, CVLang, ThemeMode, SpacingMode } from '../types';
-import { SAMPLE_CV, SAMPLE_LETTER } from '../data/sample';
+import { EMPTY_CV, EMPTY_LETTER } from '../data/sample';
 
 const STORAGE_KEY_CV = 'cv_studio_cv_data_v1';
 const STORAGE_KEY_LETTER = 'cv_studio_letter_data_v1';
@@ -48,7 +48,7 @@ export function loadSavedCV(): CVData {
   } catch (err) {
     console.warn('localStorage non accessible pour CVData, utilisation du fallback.', err);
   }
-  return inMemoryCV || SAMPLE_CV;
+  return inMemoryCV || EMPTY_CV;
 }
 
 export function saveCV(data: CVData): boolean {
@@ -74,7 +74,7 @@ export function loadSavedLetter(): CoverLetterData {
   } catch (err) {
     console.warn('localStorage non accessible pour CoverLetter, utilisation du fallback.', err);
   }
-  return inMemoryLetter || SAMPLE_LETTER;
+  return inMemoryLetter || EMPTY_LETTER;
 }
 
 export function saveLetter(data: CoverLetterData): boolean {
