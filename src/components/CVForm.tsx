@@ -480,7 +480,7 @@ export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
                 <input
                   type="text"
                   maxLength={LIMITS.nom}
-                  placeholder="Jean Dupont"
+                  placeholder="Votre Nom Complet"
                   value={data.nom}
                   onChange={(e) => handleIdentityChange('nom', e.target.value)}
                   className={inputClass}
@@ -513,7 +513,7 @@ export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
                 <input
                   type="email"
                   maxLength={LIMITS.email}
-                  placeholder="jean.dupont@email.com"
+                  placeholder="prenom_nom@email.com"
                   value={data.contact?.email || ''}
                   onChange={(e) => handleContactChange('email', e.target.value)}
                   className={inputClass}
@@ -525,7 +525,7 @@ export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
                 <input
                   type="tel"
                   maxLength={LIMITS.telephone}
-                  placeholder="06 12 34 56 78"
+                  placeholder="+237xxxxxxxxx"
                   value={data.contact?.telephone || ''}
                   onChange={(e) => handleContactChange('telephone', e.target.value)}
                   className={inputClass}
@@ -537,7 +537,7 @@ export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
                 <input
                   type="text"
                   maxLength={LIMITS.localisation}
-                  placeholder="Paris, 75008"
+                  placeholder="adresse,ville-pays"
                   value={data.contact?.localisation || ''}
                   onChange={(e) => handleContactChange('localisation', e.target.value)}
                   className={inputClass}
@@ -549,7 +549,7 @@ export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
                 <input
                   type="text"
                   maxLength={LIMITS.permis}
-                  placeholder="Permis B (véhiculé)"
+                  placeholder="Permis B"
                   value={data.contact?.permis || ''}
                   onChange={(e) => handleContactChange('permis', e.target.value)}
                   className={inputClass}
@@ -561,7 +561,7 @@ export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
                 <input
                   type="text"
                   maxLength={LIMITS.lien}
-                  placeholder="linkedin.com/in/jeandupont"
+                  placeholder="linkedin.com/in/prenom_nom"
                   value={data.contact?.lien || ''}
                   onChange={(e) => handleContactChange('lien', e.target.value)}
                   className={inputClass}
@@ -727,7 +727,7 @@ export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
                     <label className={labelClass}>Établissement</label>
                     <input
                       type="text"
-                      placeholder="Université Paris 1"
+                      placeholder="Université de Douala"
                       value={formation.etablissement}
                       onChange={(e) => updateFormation(idx, 'etablissement', e.target.value)}
                       className={inputClass}
@@ -862,7 +862,7 @@ export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
                     <label className={labelClass}>Entreprise</label>
                     <input
                       type="text"
-                      placeholder="Groupe Alpha"
+                      placeholder="Perenco Cameroun"
                       value={exp.entreprise}
                       onChange={(e) => updateExperience(idx, 'entreprise', e.target.value)}
                       className={inputClass}
@@ -1317,7 +1317,7 @@ export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
             <input
               type="text"
               maxLength={LIMITS.centresInteret}
-              placeholder="Photographie argentique, semi-marathon, échecs"
+              placeholder="Danse, semi-marathon, échecs"
               value={data.centresInteret || ''}
               onChange={(e) => onChange((p) => ({ ...p, centresInteret: e.target.value }))}
               className={inputClass}
