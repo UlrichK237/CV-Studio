@@ -1037,14 +1037,15 @@ export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
                     placeholder="Anglais, Espagnol..."
                     value={l.langue}
                     onChange={(e) => updateLangue(idx, 'langue', e.target.value)}
-                    className={`${inputClass} flex-1`}
+                    className={`${inputClass} flex-1 min-w-0`}
                   />
                   <input
                     type="text"
                     placeholder="Courant / C1"
                     value={l.niveau}
                     onChange={(e) => updateLangue(idx, 'niveau', e.target.value)}
-                    className={`${inputClass} w-36`}
+                    className={`${inputClass} shrink-0`}
+                    style={{ width: '9rem' }}
                   />
                   <button
                     type="button"
