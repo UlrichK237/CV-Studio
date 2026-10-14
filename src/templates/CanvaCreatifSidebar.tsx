@@ -346,9 +346,9 @@ export const CanvaCreatifSidebar: React.FC<CanvaCreatifSidebarProps> = ({
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: palette.fonce }} />
               {t.sections.projets}
             </h2>
-            <div className="space-y-2 pl-2">
+            <div className="space-y-2.5 pl-2 border-l-2" style={{ borderColor: palette.borderClair || palette.clair }}>
               {data.projets.map((p) => (
-                <div key={p.id}>
+                <div key={p.id} className="relative pl-3">
                   <div className="flex justify-between items-baseline gap-2">
                     <h4
                       className="font-bold leading-tight flex-1 min-w-0"
