@@ -825,6 +825,7 @@ export default function App() {
             {/* Options de téléchargement */}
             <div className="space-y-3">
               {/* Option 1 : PDF texte sélectionnable (Recommandé) */}
+            {!isIOS() && (
               <button
                 type="button"
                 onClick={() => {
@@ -850,6 +851,7 @@ export default function App() {
                   </p>
                 </div>
               </button>
+            )}
 
               {/* Option 2 : PDF image */}
               <button
@@ -875,6 +877,7 @@ export default function App() {
             </div>
 
             {/* Message d'aide de la fenêtre d'impression existant */}
+            {!isIOS() && (
             <div className="bg-surface-secondary/70 border border-default rounded-xl p-3.5 space-y-2 text-[12px] mt-4">
               <p className="font-semibold text-accent flex items-center gap-1.5">
                 <span>Dans la fenêtre d'impression :</span>
@@ -887,6 +890,7 @@ export default function App() {
                 <li><strong>Options :</strong> Décocher « En-têtes et pieds de page »</li>
               </ul>
             </div>
+            )}
           </div>
         </div>
       )}
