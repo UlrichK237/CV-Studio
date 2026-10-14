@@ -100,7 +100,7 @@ export const CanvaCreatifSidebar: React.FC<CanvaCreatifSidebarProps> = ({
               {data.contact.telephone && (
                 <li className="flex items-center gap-2">
                   <Phone className="w-3.5 h-3.5 shrink-0 opacity-80" />
-                  <span className="break-all">{data.contact.telephone}</span>
+                  <span className="whitespace-nowrap">{data.contact.telephone}</span>
                 </li>
               )}
               {data.contact.email && (
