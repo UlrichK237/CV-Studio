@@ -625,6 +625,8 @@ export default function App() {
                     role="menu"
                     className="absolute right-0 top-full mt-1.5 w-72 bg-surface border border-default rounded-xl shadow-dropdown py-1.5 z-50 text-[13px]"
                   >
+                   {!isIOS() && (
+                    <>
                     <button
                       type="button"
                       role="menuitem"
@@ -649,6 +651,8 @@ export default function App() {
                     </button>
 
                     <div className="my-1 border-t border-default" />
+                  </>
+                 )}
 
                     <button
                       type="button"
