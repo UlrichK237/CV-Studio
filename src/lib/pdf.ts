@@ -168,3 +168,12 @@ export async function generateImagePdf(
     return { success: false, error: message };
   }
 }
+
+/** iPhone / iPad (y compris iPadOS qui se présente comme un Mac tactile) */
+export function isIOS(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  );
+}
