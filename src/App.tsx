@@ -31,7 +31,7 @@ import {
   saveSettings,
   clearAllSavedData,
 } from './lib/storage';
-import { printDocument, generateImagePdf } from './lib/pdf';
+import { printDocument, generateImagePdf, isIOS } from './lib/pdf';
 import { CVForm } from './components/CVForm';
 import { CoverLetterForm } from './components/CoverLetterForm';
 import { DocumentPreview } from './components/DocumentPreview';
@@ -202,7 +202,12 @@ export default function App() {
     setIsDownloadMenuOpen(false);
   };
 
-  const handleDownloadPdf = () => {
+    const handleDownloadPdf = () => {
+    // iOS : l'impression native force Letter + en-têtes/pieds de page, on passe par le PDF image
+    if (isIOS()) {
+      handleDownloadDirectPdf();
+      return;
+    }
     const isLetter = settings.activeTab === 'lettre';
     const nomFichier = isLetter
       ? `Lettre_${cv.nom || 'Candidat'}`
