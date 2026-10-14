@@ -165,6 +165,12 @@ textarea:not(#cv-print-wrapper *)::placeholder {
   margin: 0 !important;
   padding: 0 !important;
 }
+/* Les ombres ne se rendent pas correctement dans les exports : on les retire du document exporté */
+#print-root,
+#print-root * {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
 
 /* Gestion plein écran */
 body.fullscreen-open {
