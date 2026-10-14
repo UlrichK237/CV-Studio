@@ -691,6 +691,7 @@ export default function App() {
                 data={cv}
                 onChange={setCv}
                 lang={settings.lang}
+                onClearAll={() => setShowResetConfirm(true)}
               />
             ) : (
               <CoverLetterForm
