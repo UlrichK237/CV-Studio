@@ -167,7 +167,7 @@ export const ModerneBleu: React.FC<ModerneBleuProps> = ({
                     >
                       <Phone className="w-3.5 h-3.5" />
                     </span>
-                    <span className="break-all">{data.contact.telephone}</span>
+                    <span className="whitespace-nowrap">{data.contact.telephone}</span>
                   </li>
                 )}
                 {data.contact.email && (
