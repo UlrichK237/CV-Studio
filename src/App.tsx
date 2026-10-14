@@ -18,6 +18,7 @@ import {
   Moon,
   X,
   ShieldCheck,
+  Home,
 } from 'lucide-react';
 import { CVData, CoverLetterData, ThemeMode } from './types';
 import { APP_NAME } from './config/app';
@@ -216,6 +217,12 @@ export default function App() {
     setIsDownloadMenuOpen(false);
   };
 
+    const goHome = () => {
+    setIsMoreMenuOpen(false);
+    setCurrentView('landing');
+    window.scrollTo({ top: 0 });
+  };
+
   if (currentView === 'landing') {
     return (
       <LandingPage
@@ -248,16 +255,16 @@ export default function App() {
           {/* VERSION MOBILE (< lg) : Une seule ligne propre, hauteur 56 px, padding 16 px */}
           <div className="flex lg:hidden items-center justify-between gap-2 w-full h-full">
             {/* Logo CV 32 px (cible tactile >= 44 px) */}
+            {/* Bouton Accueil (icône maison + libellé dès 400 px) */}
             <button
               type="button"
-              onClick={() => setCurrentView('landing')}
-              className="w-11 h-11 -ml-1 flex items-center justify-center hover:opacity-85 transition-opacity cursor-pointer shrink-0"
+              onClick={goHome}
+              className="min-h-[44px] -ml-2 px-2 flex items-center gap-1.5 text-primary hover:opacity-85 transition-opacity cursor-pointer shrink-0"
               title="Retourner à l'accueil"
               aria-label="Retourner à l'accueil"
             >
-              <div className="w-8 h-8 rounded-lg bg-accent text-accent-contrast flex items-center justify-center font-bold text-sm tracking-tight shrink-0 shadow-xs">
-                CV
-              </div>
+              <Home className="w-5 h-5" />
+              <span className="hidden min-[400px]:inline text-[13px] font-medium">Accueil</span>
             </button>
 
             {/* Onglets CV | Lettre, au centre, avec leurs libellés TOUJOURS visibles */}
@@ -447,7 +454,7 @@ export default function App() {
             <div className="flex items-center gap-6 min-w-0">
               <button
                 type="button"
-                onClick={() => setCurrentView('landing')}
+                onClick={goHome}
                 className="flex items-center gap-2 hover:opacity-85 transition-opacity cursor-pointer shrink-0"
                 title="Retourner à l'accueil"
               >
@@ -457,6 +464,16 @@ export default function App() {
                 <span className="font-semibold text-[15px] tracking-tight text-primary">
                   {APP_NAME}
                 </span>
+              </button>
+
+              
+              <button
+                type="button"
+                onClick={goHome}
+                className="h-8 px-2.5 flex items-center gap-1.5 rounded-lg text-[13px] font-medium text-muted hover:text-primary hover:bg-surface-secondary transition-colors cursor-pointer shrink-0"
+              >
+                <Home className="w-3.5 h-3.5" />
+                <span>Accueil</span>
               </button>
 
               {/* Onglets CV / Lettre de motivation */}
