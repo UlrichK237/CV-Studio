@@ -32,9 +32,10 @@ interface CVFormProps {
   data: CVData;
   onChange: React.Dispatch<React.SetStateAction<CVData>>;
   lang: CVLang;
+  onClearAll?: () => void;
 }
 
-export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
+export const CVForm: React.FC<CVFormProps> = ({ data, onChange, onClearAll }) => {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     infos: true,
     profil: true,
@@ -345,13 +346,24 @@ export const CVForm: React.FC<CVFormProps> = ({ data, onChange }) => {
     <div className="w-full max-w-[560px] mx-auto space-y-4">
       {/* 1. LIGNE FINE DE PROGRESSION ET NAVIGATION STICKY */}
       <div className="sticky top-[57px] z-20 bg-page/95 backdrop-blur-xs py-2 space-y-2 border-b border-default">
-        <div className="flex items-center justify-between text-[13px]">
+        <div className="flex items-center justify-between gap-3 text-[13px]">
           <span className="font-medium text-primary">
             Complétion <span className="tabular-nums font-semibold">{completionPercentage}%</span>
           </span>
-          <span className="text-muted text-[12px] tabular-nums">
-            {completedCount} / {sectionsStatus.length} sections renseignées
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="hidden sm:inline text-muted text-[12px] tabular-nums">
+              {completedCount} / {sectionsStatus.length} sections renseignées
+            </span>
+            {onClearAll && (
+              <button
+                type="button"
+                onClick={onClearAll}
+                className="py-1 text-[12px] font-medium text-danger hover:underline cursor-pointer"
+              >
+                Tout effacer
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Barre de 4px */}
